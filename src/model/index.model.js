@@ -1,5 +1,6 @@
 const UserModel = require('./user.model');
-const VoteModel = require('./vote.model');
-const IssueModel = require('./issue.model');
+const BookModel = require('./books.model');
+const RoomsModel = require('./room.model');
+const RoomAvailableModel = require('./roomAvailableSlot.model');
 
-module.exports = { UserModel, IssueModel, VoteModel };
+module.exports = { UserModel, RoomAvailableModel, RoomsModel, BookModel };
