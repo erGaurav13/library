@@ -1,5 +1,5 @@
 const authController = require('./AuthController/auth.controller');
 const booksController = require('./booksController/books.controller');
 const reservcationController = require('./reservcationController/reservation.controller');
-
-module.exports = { authController, booksController, reservcationController };
+const RoomController = require('./roomController/room.controller');
+module.exports = { authController, booksController, reservcationController, RoomController };

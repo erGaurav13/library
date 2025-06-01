@@ -1,47 +1,52 @@
-// services/reservation.service.js
-const ReservationModel = require('../models/reservation.model');
-const BookModel = require('../models/book.model');
-const RoomAvailableSlotModel = require('../models/roomAvailableSlot.model');
+// controllers/reservation.controller.js
+const reservationService = require('./reservcation.service');
 
-class ReservationService {
-  async createReservation(reservationData) {
-    if (reservationData.type === 'book') {
-      const book = await BookModel.findById(reservationData.book);
-      if (book.availableCopies < 1) throw new Error('No available copies');
-    } else {
-      const slot = await RoomAvailableSlotModel.findById(reservationData.roomSlot);
-      if (!slot.isAvailable) throw new Error('Slot not available');
-      slot.isAvailable = false;
-      await slot.save();
-      reservationData.roomStart = slot.startDateTime;
-      reservationData.roomEnd = slot.endDateTime;
+class ReservationController {
+  async createReservation(req, res) {
+    try {
+        console.log(req.user,"UUU")
+      if (req.user.role !== '2') throw new Error('Forbidden');
+      const reservation = await reservationService.createReservation({
+        ...req.body,
+        user: req.user.id
+      });
+      res.status(201).json(reservation);
+    } catch (err) {
+      res.status(400).json({ error: err.message });
     }
-    return ReservationModel.create(reservationData);
   }
 
-  async updateReservationStatus(id, status, userRole) {
-    const reservation = await ReservationModel.findById(id);
-    
-    if (['approved', 'declined'].includes(status) && userRole !== 'librarian') {
-      throw new Error('Unauthorized status change');
+  async getUserReservations(req, res) {
+    try {
+      const reservations = await reservationService.getUserReservations(req.user.id);
+      res.status(200).json(reservations);
+    } catch (err) {
+      res.status(500).json({ error: err.message });
     }
-
-    if (status === 'approved' && reservation.type === 'book') {
-      const book = await BookModel.findById(reservation.book);
-      book.availableCopies -= 1;
-      await book.save();
-    }
-
-    reservation.status = status;
-    return reservation.save();
   }
 
-  async getUserReservations(userId) {
-    return ReservationModel.find({ user: userId });
+  async getAllReservations(req, res) {
+    try {
+      if (req.user.role !== 'librarian') throw new Error('Forbidden');
+      const reservations = await reservationService.getAllReservations();
+      res.status(200).json(reservations);
+    } catch (err) {
+      res.status(403).json({ error: err.message });
+    }
   }
 
-  async getAllReservations() {
-    return ReservationModel.find().populate('user', 'email username');
+  async updateStatus(req, res) {
+    try {
+      const { status } = req.body;
+      const reservation = await reservationService.updateReservationStatus(
+        req.params.id, 
+        status,
+        req.user.role
+      );
+      res.status(200).json(reservation);
+    } catch (err) {
+      res.status(400).json({ error: err.message });
+    }
   }
 }
-module.exports = new ReservationService();
+module.exports = new ReservationController();

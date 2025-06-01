@@ -1,7 +1,7 @@
 // services/reservation.service.js
-const ReservationModel = require('../models/reservation.model');
-const BookModel = require('../models/book.model');
-const RoomAvailableSlotModel = require('../models/roomAvailableSlot.model');
+// const ReservationModel = require('../models/reservation.model');
+// const BookModel = require('../models/book.model');
+const { RoomAvailableModel, BookModel, ReservationModel } = require('../../model/index.model');
 
 class ReservationService {
   async createReservation(reservationData) {
@@ -9,7 +9,7 @@ class ReservationService {
       const book = await BookModel.findById(reservationData.book);
       if (book.availableCopies < 1) throw new Error('No available copies');
     } else {
-      const slot = await RoomAvailableSlotModel.findById(reservationData.roomSlot);
+      const slot = await RoomAvailableModel.findById(reservationData.roomSlot);
       if (!slot.isAvailable) throw new Error('Slot not available');
       slot.isAvailable = false;
       await slot.save();
@@ -21,8 +21,8 @@ class ReservationService {
 
   async updateReservationStatus(id, status, userRole) {
     const reservation = await ReservationModel.findById(id);
-    
-    if (['approved', 'declined'].includes(status) && userRole !== 'librarian') {
+
+    if (['approved', 'declined'].includes(status) && userRole !== '1') {
       throw new Error('Unauthorized status change');
     }
 

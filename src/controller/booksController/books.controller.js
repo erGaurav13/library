@@ -4,7 +4,7 @@ const bookService = require('./books.service');
 class BookController {
   async createBook(req, res) {
     try {
-      if (req.user.role !== 'librarian') throw new Error('Forbidden');
+      if (req.user.role !== '1') throw new Error('Forbidden');
       const book = await bookService.createBook(req.body);
       res.status(201).json(book);
     } catch (err) {
@@ -23,7 +23,7 @@ class BookController {
 
   async updateBook(req, res) {
     try {
-      if (req.user.role !== 'librarian') throw new Error('Forbidden');
+      if (req.user.role !== '1') throw new Error('Forbidden');
       const book = await bookService.updateBook(req.params.id, req.body);
       res.status(200).json(book);
     } catch (err) {
@@ -33,7 +33,7 @@ class BookController {
 
   async deleteBook(req, res) {
     try {
-      if (req.user.role !== 'librarian') throw new Error('Forbidden');
+      if (req.user.role !== '1') throw new Error('Forbidden');
       await bookService.deleteBook(req.params.id);
       res.status(204).end();
     } catch (err) {

@@ -1,5 +1,5 @@
 // services/book.service.js
-const BookModel = require('../../model/index.model');
+const {BookModel} = require('../../model/index.model');
 
 class BookService {
   async createBook(bookData) {
