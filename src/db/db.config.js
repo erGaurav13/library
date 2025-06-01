@@ -9,7 +9,7 @@ const dbMain = process.env.MONGO_URI;
 const connectDB = async () => {
   try {
     mongoose.connect(
-      'mongodb+srv://r:f@cluster0.h1xl8c4.mongodb.net/arya?retryWrites=true&w=majority',
+      'mongodb+srv://r:f@cluster0.h1xl8c4.mongodb.net/library?retryWrites=true&w=majority',
     );
     console.log('✅ MongoDB connected successfully');
   } catch (err) {
