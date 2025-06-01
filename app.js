@@ -37,13 +37,13 @@ app.use(express.urlencoded({ extended: true })); // For handling URL-encoded dat
 app.use(express.json({ limit: '10kb' })); // For handling JSON data
 app.use(limiter); // For rate limiting requests
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-// Timeout handler
-app.use((req, res, next) => {
-  res.setTimeout(5000, () => {
-    res.status(408).send('Request Timeout');
-  });
-  next();
-});
+// // Timeout handler
+// app.use((req, res, next) => {
+//   res.setTimeout(5000, () => {
+//     res.status(408).send('Request Timeout');
+//   });
+//   next();
+// });
 
 // Routes
 

@@ -27,11 +27,35 @@ class ReservationController {
 
   async getAllReservations(req, res) {
     try {
-      if (req.user.role !== 'librarian') throw new Error('Forbidden');
-      const reservations = await reservationService.getAllReservations();
-      res.status(200).json(reservations);
+      if (req.user.role !== '1') throw new Error('Forbidden');
+      
+      // Get query parameters
+      const { 
+        page = 1, 
+        limit = 10, 
+        sort = 'createdAt:-1', 
+        status, 
+        type 
+      } = req.query;
+
+      // Parse sort parameter (format: "field:direction")
+      const sortOptions = {};
+      if (sort) {
+        const [field, direction] = sort.split(':');
+        sortOptions[field] = direction === 'desc' ? -1 : 1;
+      }
+
+      // Get reservations
+      const result = await reservationService.getAllReservations(
+        { status, type }, 
+        sortOptions, 
+        parseInt(page), 
+        parseInt(limit)
+      );
+
+      return res.status(200).json(result);
     } catch (err) {
-      res.status(403).json({ error: err.message });
+     return res.status(403).json({ error: err.message });
     }
   }
 
@@ -42,6 +66,30 @@ class ReservationController {
         req.params.id, 
         status,
         req.user.role
+      );
+      res.status(200).json(reservation);
+    } catch (err) {
+      res.status(400).json({ error: err.message });
+    }
+  }
+
+    async markPickedUp(req, res) {
+    try {
+      const reservation = await reservationService.markPickedUp(
+        req.params.id,
+        req.user.id
+      );
+      res.status(200).json(reservation);
+    } catch (err) {
+      res.status(400).json({ error: err.message });
+    }
+  }
+
+  async markCheckedIn(req, res) {
+    try {
+      const reservation = await reservationService.markCheckedIn(
+        req.params.id,
+        req.user.id
       );
       res.status(200).json(reservation);
     } catch (err) {

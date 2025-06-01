@@ -3,7 +3,7 @@ const PORT = process.env.PORT || 3000;
 const app = require('./app');
 const connectDB = require('./src/db/db.config');
 const server = http.createServer(app);
-
+require("./src/3rdParty/Emails/email.worker")
 server.listen(PORT, async () => {
   if (process.env.NODE_ENV === 'development') {
     console.log(`Server is running in development mode on port ${PORT}`);

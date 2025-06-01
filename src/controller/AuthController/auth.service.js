@@ -43,7 +43,7 @@ class AuthService {
       { id: user._id, email: user.email, username: user?.username, role: user?.role },
       process.env.JWT_SECRET,
       {
-        expiresIn: '1h',
+        expiresIn: '12h',
       },
     );
     user.token = token;

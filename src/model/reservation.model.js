@@ -28,12 +28,14 @@ const reservationSchema = new mongoose.Schema(
     // Book fields
     book: { type: mongoose.Schema.Types.ObjectId, ref: 'Book' },
     pickupDate: Date,
+    pickedUpAt:Date,
     dueDate: Date,
     returnedDate: Date,
     // Room fields
     roomSlot: { type: mongoose.Schema.Types.ObjectId, ref: 'RoomAvailableSlot' },
     roomStart: Date,
     roomEnd: Date,
+
   },
   { timestamps: true },
 );
