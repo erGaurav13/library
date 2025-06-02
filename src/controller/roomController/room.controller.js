@@ -12,10 +12,32 @@ class RoomController {
     }
   }
 
-  async getRooms(req, res) {
+   async getRooms(req, res) {
     try {
-      const rooms = await roomService.getRooms();
-      res.status(200).json(rooms);
+      // Get query parameters
+      const { 
+        page = 1, 
+        limit = 10, 
+        search = '',
+        sort = 'name:1' 
+      } = req.query;
+      
+      // Parse sort parameter
+      const sortOptions = {};
+      if (sort) {
+        const [field, direction] = sort.split(':');
+        sortOptions[field] = direction === 'desc' ? -1 : 1;
+      }
+      
+      // Get paginated rooms
+      const result = await roomService.getRooms(
+        search,
+        sortOptions,
+        parseInt(page),
+        parseInt(limit)
+      );
+      
+      res.status(200).json(result);
     } catch (err) {
       res.status(500).json({ error: err.message });
     }
@@ -51,6 +73,31 @@ class RoomController {
       res.status(500).json({ error: err.message });
     }
   }
+
+   async updateRoom(req, res) {
+    try {
+      if (req.user.role !== '1') throw new Error('Forbidden');
+      
+      const updatedRoom = await roomService.updateRoom(
+        req.params.id,
+        req.body
+      );
+      
+      if (!updatedRoom) {
+        return res.status(404).json({ error: 'Room not found' });
+      }
+      
+      res.status(200).json(updatedRoom);
+    } catch (err) {
+      if (err.message === 'Forbidden') {
+        res.status(403).json({ error: err.message });
+      } else {
+        res.status(400).json({ error: err.message });
+      }
+    }
+  }
+
+  
 }
 
 module.exports = new RoomController();
