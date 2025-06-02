@@ -5,9 +5,12 @@ const {ReservationModel} = require('../../model/index.model');
 const emailService = require('./email.service');
 
 const connection = new IORedis({
-  host: process.env.REDIS_HOST || 'localhost',
-  port: process.env.REDIS_PORT || 6379,
-   maxRetriesPerRequest: null,
+  host: 'redis-13125.crce179.ap-south-1-1.ec2.redns.redis-cloud.com',
+  port: 13125,
+  username: 'default',
+  password: 'bbWRV2Y5Qi7bAh4mhtgOBcgCxSqFpYK6',
+  tls: {} ,// Required for Redis Cloud,
+    maxRetriesPerRequest: null 
 });
 
 const worker = new Worker('reminderQueue', async job => {
