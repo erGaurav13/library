@@ -9,5 +9,7 @@ router.post('/rooms', auth, RoomController.createRoom);
 router.get('/rooms', auth, RoomController.getRooms);
 router.post('/rooms/slots', auth, RoomController.createSlot);
 router.get('/rooms/:roomId/slots', auth, RoomController.getAvailableSlots);
+// routes.js
+router.get('/rooms/:id', auth, RoomController.getRoomById);
 
 module.exports = router;

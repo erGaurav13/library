@@ -23,5 +23,10 @@ class BookService {
   async deleteBook(id) {
     return BookModel.findByIdAndDelete(id);
   }
+
+  async getBookById(id) {
+    return BookModel.findById(id);
+  }
+  
 }
 module.exports = new BookService();

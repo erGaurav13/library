@@ -1,6 +1,6 @@
 // services/room.service.js
-const {RoomsModel ,RoomAvailableModel}= require('../../model/index.model');
- 
+const { RoomsModel, RoomAvailableModel } = require('../../model/index.model');
+
 class RoomService {
   async createRoom(roomData) {
     return RoomsModel.create(roomData);
@@ -16,10 +16,14 @@ class RoomService {
   }
 
   async getAvailableSlots(roomId) {
-    return RoomAvailableModel.find({ 
+    return RoomAvailableModel.find({
       room: roomId,
-      isAvailable: true 
+      isAvailable: true,
     }).populate('room');
+  }
+
+  async getRoomById(id) {
+    return RoomsModel.findById(id);
   }
 }
 

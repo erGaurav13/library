@@ -126,7 +126,7 @@ class ReservationService {
           { reservationId: reservation._id },
           { delay:0 }
         );
-        console.log(idD,"Added")
+        // console.log(idD,"Added")
       }
     } catch (error) {
       console.error('Error scheduling reminder:', error);

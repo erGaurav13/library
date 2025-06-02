@@ -39,6 +39,18 @@ class RoomController {
       res.status(500).json({ error: err.message });
     }
   }
+
+   async getRoomById(req, res) {
+    try {
+      const room = await roomService.getRoomById(req.params.id);
+      if (!room) {
+        return res.status(404).json({ error: 'Room not found' });
+      }
+      res.status(200).json(room);
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  }
 }
 
 module.exports = new RoomController();
